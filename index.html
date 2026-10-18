@@ -244,6 +244,21 @@ body.menu-open{overflow:hidden}
   .guard:hover .info,.guard:focus-within .info{transform:none}
   .guard .info::after{display:none}
 }
+
+/* ---------- sonido y volver arriba ---------- */
+.fab{position:fixed;bottom:22px;z-index:70;width:52px;height:52px;margin:4px;border:0;cursor:pointer;display:grid;place-items:center;transition:transform .12s,opacity .2s,visibility .2s,filter .12s}
+.fab svg{width:28px;height:28px;shape-rendering:crispEdges}
+.fab:hover{filter:brightness(1.12)}
+.fab--snd{left:22px;color:var(--hielo);background:linear-gradient(#1b2560,#101842);box-shadow:0 -4px 0 0 #3a49b8,0 4px 0 0 #3a49b8,-4px 0 0 0 #3a49b8,4px 0 0 0 #3a49b8,inset 0 -5px 0 rgba(0,0,0,.35),inset 0 3px 0 rgba(255,255,255,.12)}
+.fab--snd .x{display:none}
+.fab--snd.off{color:var(--apagado)}
+.fab--snd.off .wave{display:none}
+.fab--snd.off .x{display:block}
+.fab--top{right:22px;color:#2b1300;background:linear-gradient(var(--oro-claro),var(--oro) 55%,var(--oro-fuerte));box-shadow:0 -4px 0 0 #7a3a00,0 4px 0 0 #7a3a00,-4px 0 0 0 #7a3a00,4px 0 0 0 #7a3a00,inset 0 -5px 0 rgba(122,58,0,.45),inset 0 3px 0 rgba(255,255,255,.45);opacity:0;visibility:hidden;transform:translateY(14px)}
+.fab--top.show{opacity:1;visibility:visible;transform:none}
+.fab--top.show:hover{transform:translateY(-3px)}
+.fab--top.show:active{transform:translateY(2px)}
+body.menu-open .fab{display:none}
 </style>
 </head>
 <body>
@@ -445,6 +460,20 @@ body.menu-open{overflow:hidden}
   </div>
 </footer>
 
+<audio id="bgm" src="musica.mp3" loop preload="none"></audio>
+<button class="fab fab--snd" id="snd" type="button" aria-label="Silenciar sonido" aria-pressed="true">
+  <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+    <rect x="1" y="6" width="3" height="4"/><rect x="4" y="5" width="2" height="6"/><rect x="6" y="3" width="2" height="10"/>
+    <g class="wave"><rect x="10" y="6" width="1" height="4"/><rect x="12" y="4" width="1" height="8"/><rect x="14" y="2" width="1" height="12"/></g>
+    <g class="x"><rect x="10" y="5" width="1" height="1"/><rect x="11" y="6" width="1" height="1"/><rect x="12" y="7" width="1" height="1"/><rect x="13" y="8" width="1" height="1"/><rect x="14" y="9" width="1" height="1"/><rect x="14" y="5" width="1" height="1"/><rect x="13" y="6" width="1" height="1"/><rect x="11" y="8" width="1" height="1"/><rect x="10" y="9" width="1" height="1"/></g>
+  </svg>
+</button>
+<button class="fab fab--top" id="top" type="button" aria-label="Volver arriba">
+  <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+    <rect x="7" y="2" width="2" height="1"/><rect x="6" y="3" width="4" height="1"/><rect x="5" y="4" width="6" height="1"/><rect x="4" y="5" width="8" height="1"/><rect x="6" y="6" width="4" height="8"/>
+  </svg>
+</button>
+
 <script>
 /* ============ CONFIGURA AQUÍ TUS DATOS ============ */
 const KAIROS = {
@@ -641,6 +670,48 @@ if (rk && !reduce) {
     scrollTo({top: top + tot * i / (slides.length - 1), behavior: "smooth"});
   }));
 }
+
+/* sonido: música de fondo, clics estilo pixel y botón de volver arriba */
+const snd = $("#snd"), bgm = $("#bgm"), topBtn = $("#top");
+let soundOn = true, musicMissing = false, ac = null;
+try { soundOn = localStorage.getItem("kairos-sound") !== "off"; } catch (e) {}
+bgm.volume = .25;
+bgm.addEventListener("error", () => { musicMissing = true; });
+const paintSnd = () => {
+  snd.classList.toggle("off", !soundOn);
+  snd.setAttribute("aria-pressed", String(soundOn));
+  snd.setAttribute("aria-label", soundOn ? "Silenciar sonido" : "Activar sonido");
+};
+const playMusic = () => {
+  if (!soundOn || musicMissing || !bgm.paused) return;
+  const p = bgm.play(); if (p && p.catch) p.catch(() => {});
+};
+const blip = (f = 520) => {
+  if (!soundOn) return;
+  try {
+    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+    const t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain();
+    o.type = "square";
+    o.frequency.setValueAtTime(f, t); o.frequency.setValueAtTime(f * 1.5, t + .035);
+    g.gain.setValueAtTime(.05, t); g.gain.exponentialRampToValueAtTime(.001, t + .09);
+    o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + .1);
+  } catch (e) {}
+};
+paintSnd();
+snd.addEventListener("click", () => {
+  soundOn = !soundOn;
+  try { localStorage.setItem("kairos-sound", soundOn ? "on" : "off"); } catch (e) {}
+  paintSnd();
+  if (soundOn) playMusic(); else bgm.pause();
+});
+/* los navegadores solo dejan sonar la música tras un primer gesto del usuario */
+["pointerdown", "keydown"].forEach(ev => addEventListener(ev, playMusic));
+document.addEventListener("click", e => {
+  const t = e.target.closest(".btn,.links a,.menu a,.rk-rail button,.burger,.fab");
+  if (t) blip(t.classList.contains("fab--top") ? 780 : 520);
+});
+topBtn.addEventListener("click", () => scrollTo({top: 0, behavior: "smooth"}));
+scenes.push(() => topBtn.classList.toggle("show", scrollY > 700));
 
 /* bucle: una sola lectura de scroll por fotograma */
 let ticking = false;
