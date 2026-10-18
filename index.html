@@ -225,6 +225,25 @@ body.menu-open{overflow:hidden}
   .brand{font-size:1.1rem}
 }
 @media (max-width:420px){.btn{font-size:.95rem}.nav .btn{padding:8px 12px}}
+
+/* ---------- chibi del Admin sobre la torre ---------- */
+.ladder{margin-top:96px}
+.step--admin{position:relative}
+.guard{position:absolute;left:50%;bottom:calc(100% + 4px);transform:translateX(-50%);z-index:5}
+.guard:hover,.guard:focus-within{z-index:20}
+.chibi--guard{width:clamp(84px,9vw,120px);aspect-ratio:auto}
+.chibi--guard img{position:static;width:100%;height:auto}
+.rank--admin{background:linear-gradient(#ff9a85,#ff6a4d)}
+.guard .info{bottom:20px;left:auto;right:100%;transform:translateX(-14px)}
+.guard .info::after{left:auto;right:-16px;clip-path:polygon(0 0,0 100%,100% 50%)}
+.guard:hover .info,.guard:focus-within .info{opacity:1;visibility:visible;transform:none}
+@media (max-width:900px){
+  .guard{position:static;transform:none;margin-left:auto;align-self:center}
+  .chibi--guard{width:72px}
+  .guard .info{right:0;bottom:100%;transform:translateY(10px)}
+  .guard:hover .info,.guard:focus-within .info{transform:none}
+  .guard .info::after{display:none}
+}
 </style>
 </head>
 <body>
@@ -262,7 +281,7 @@ body.menu-open{overflow:hidden}
     </figure>
 
     <div class="core">
-      <button class="btn" type="button" data-copy><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABsUlEQVR42qWTsYpUMRSGvx22uQlYnRQ2N+0FsfURLHyAbawsxEKmkGUXbGQaQWxWxE6wmuYWIvgEC9MJWqexyDQyJG1OyrUx2bmWeqsLSb7z5fwnJ/M83/Af3ylAjBGAlFJfUFVEBBEhhACAiGCtZRgGaq3sdjtWAKUUSik45zrAGIOqUmtlmiYu3n/oRWqtfd/qWOfs/ILwYgPQYcMwEEJgfVA+3n3AOI7deAGw1rI+KN+/Xi8smvrDz58ACCHgvV/2QFUBmK42jKron8qllK4bQuDlBHtjKKUsAe2+rZqqknPm2E5EupW1tkNWzcA5h6qiqhhjyDnz5NWmQ2qt3SalhLX2FuCc68Rm4r1nfVDe3blHjJFSyuLgMAy3gHbYGIOIkHMmpcR0tVkMjTGGs/OLHu8iBRHh+Zu3/Hh2iYj0GB//vGaapg5ZH5Qv9x8tY2xVW4yqSowRY0wH5ZwREcbXl4upPf17cTo6lFIi59znoU3l01/f0GODFluLsDXJOYcxBmMM3ntSSuz3+8UVV8cPJ+eM954YIyGE3mkR6f/jOJJz7uN8Ms/zzXa7/efn/BsYJOsyYL8u8wAAAABJRU5ErkJggg==" alt="">Copiar IP</button>
+      <button class="btn" type="button" data-copy><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABsUlEQVR42qWTsYpUMRSGvx22uQlYnRQ2N+0FsfURLHyAbawsxEKmkGUXbGQaQWxWxE6wmuYWIvgEC9MJWqexyDQyJG1OyrUx2bmWeqsLSb7zn/Of8Z5Z5/iG/+M7BYgxApBS6gu0qigiiAghBABEBGstwzBQa2W327EC0DIpphJwzvUAYwyqSq2Vaero4v1BL1Jr7ftWxzpn5xeEFxuADhuGgRAC6wPlY3cPGMexGy8A1lrWB+X71+uFRVN/+PkTACGEgPd+2QNVBWC62jCqon8ql1K6bgiBlxPsjaGUsgS0+7ZqqknOmWM7EelW1toOWTUD5xyqiqpijCHnzJNXmw6ptXabcgJb2/DuzCOxQcDfQ1gKDQ0y2Bc8DCjUBXKlG7GPxRvFhnTK7IFJ6ZKkEB6S7vOzyj12APkSSk81SQy6mI51KZ4s6hxLPSmODC6O5bKpO0UIJfRIpP8OPSQ6FeHy8VWTxYFNFtDQwvq5K1szkuAkE16PFgRFrqPDUy3KFEQBwEbgE+Pco+VYJCbnYwUi4tD41WKq7/HmYlkdQJ9E4jaAVNCmwnTxM+OfwY+ZxvtH+qlA/nYUQ3r9P/ZRX/eYlvL+eAAZBjRjnGVcAAAAAElFTkSuQmCC" alt="">Copiar IP</button>
       <a class="btn btn--oscuro" data-cfg-href="discord" href="#" target="_blank" rel="noopener">Entrar al Discord</a>
     </div>
 
@@ -296,7 +315,7 @@ body.menu-open{overflow:hidden}
     </div>
 
     <ul class="inv">
-      <li><span class="slot"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAoUlEQVR42mNgGGjAiC7Ax6f0H5+GT5/uMeI0AKb5xMeDWDVb8NtjGMKErjn/YwtO22FyyK5kQtccyWCL04BIBlsMQxhhHNZZGlg1/bj0Gqs485S3DJ8+3WOEe+F32g2iQ555ylsGFC/AAoUUQ2B6mNAFCBmCbDuKAdjiGJdmrNGIDLC5AptmrAbg8wo2FzLhCyCYIej+xpsXcOULQuFDNgAAD7FTjNEiRYgAAAAASUVORK5CYII=" alt=""></span><div><h3>Versión</h3><p data-cfg="version">Java y Bedrock</p></div></li>
+      <li><span class="slot"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAoUlEQVR42mNgGGjAiC7Ax6f0Hx+GT5/uMeI0AKb5xMeDWDVb8NtjGMKErjn/YwtO22FyyK5kQtccyWCL04BIBlsMQxhhHNZZGlg1/bj0Gqs485S3DJ8+3WOEe+F32g2iQ555ylsGFC/AAoUUQ2B6mNAFCBmCbDuKAdjiGJdmrNGIDLC5AptmrAbg8wo2FzLhCyCYIej+xpsXcOULQuFDNgAAD7FTjNEiRYgAAAAASUVORK5CYII=" alt=""></span><div><h3>Versión</h3><p data-cfg="version">Java y Bedrock</p></div></li>
       <li><span class="slot"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAv0lEQVR42s2TsQ7CIBCGfxoHu9zazgx9JBP3bsY38FHYTXwF36RD5zYxMbJ0MaGDAQ+KVOLiTQT+7ztyBODHEnZBJE0OqHUvnMDCj9PRBUal0AwTUvsAsOHwqJTXpatLF+ZnNtsMEwSRNHajupxf4d3ehau2XYgB4Hq74/DcoggPOBx2jg6RSJquLrOn792ADyUHBoDCPse3Eg5r3YuCv+maJIQBvIe4JonBniAl+QQvBDFJCvb+Qljh34jB/1EzRKB+uyMe2fUAAAAASUVORK5CYII=" alt=""></span><div><h3>Jugadores en línea</h3><p id="jugadores">Estado no disponible</p></div></li>
       <li><span class="slot"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAb0lEQVR42mNgGPKAEZnDx6f0n1QDWNAFPr6oI0rjiSnZDO4t4gxMlNjOwMCAMIBU21EMINd2lDB4d1qS4e/j2QQ1nN54AbcXSAHuLeKUGcDAwMDw6dM9RiZKbKfIBZ8+3WNECUQh0+dEahUfZJkJAIb5HBkg9NbaAAAAAElFTkSuQmCC" alt=""></span><div><h3>Modalidades</h3><p>Por ahora, Survival.</p></div></li>
       <li><span class="slot"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAArklEQVR42mNkIAPw8Sn9h7GZyNVsf+My6QbANF96f5fh7KYDpNvMx6f0/8Hf//+lZmz9D+OPamZgYESPV2Rw6f1dBqvZ2xi+lOUyMDAwMHz6dI8Rp20rSqz+ryix+k+qs1FcMCtNgoGBgYFhadFuhrObDhC2GWYANkPSZr0gqBmeEmGaa3w44RphBhECTDDNPjo/GFq2fEexnSgDYDZvucKB4mRiDWFEDmFC/sUGAJ8thpFEn8hEAAAAAElFTkSuQmCC" alt=""></span><div><h3>Comunidad</h3><p>Súmate a nuestro <a data-cfg-href="discord" href="#" target="_blank" rel="noopener">Discord oficial</a>.</p></div></li>
@@ -326,7 +345,21 @@ body.menu-open{overflow:hidden}
       <li class="step" style="--c:#4de6f5"><span class="r">Soporte</span></li>
       <li class="step" style="--c:#5b8cff"><span class="r">Mod</span></li>
       <li class="step" style="--c:#b06bff"><span class="r">SMod</span></li>
-      <li class="step" style="--c:#ff6a4d"><span class="r">Admin</span><span class="n">The_<wbr>Crow_<wbr>Raptor</span></li>
+      <li class="step step--admin" style="--c:#ff6a4d">
+        <div class="guard">
+          <div class="chibi chibi--guard" tabindex="0"><img src="chibi-z-removebg-preview-placingBlock-pixel.png" alt="Chibi de The_Crow_Raptor, administrador de Kairos Network"></div>
+          <div class="info" role="tooltip">
+            <div class="info-head"><span class="rank rank--admin">Admin</span><strong>The_Crow_Raptor</strong></div>
+            <small>Primer administrador de Kairos</small>
+            <ul>
+              <li>Vigila a los usuarios del servidor.</li>
+              <li>Ayuda a los owners.</li>
+              <li>Les reporta todo lo que sucede.</li>
+            </ul>
+          </div>
+        </div>
+        <span class="r">Admin</span><span class="n">The_<wbr>Crow_<wbr>Raptor</span>
+      </li>
       <li class="step" style="--c:#ffb020"><span class="r">Owner</span><span class="n">NoaCrack</span><span class="n">AngelDavid</span></li>
     </ol>
   </div>
