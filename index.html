@@ -259,6 +259,13 @@ body.menu-open{overflow:hidden}
 .fab--top.show:hover{transform:translateY(-3px)}
 .fab--top.show:active{transform:translateY(2px)}
 body.menu-open .fab{display:none}
+
+/* ---------- pantalla de entrada (activa la música) ---------- */
+.gate{display:none}
+html.js .gate{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:0 6vw;text-align:center;background:rgba(7,11,31,.97);transition:opacity .4s,visibility .4s}
+.gate img{width:96px;height:96px}
+.gate small{color:var(--apagado)}
+.gate.out{opacity:0;visibility:hidden;pointer-events:none}
 </style>
 </head>
 <body>
@@ -460,7 +467,12 @@ body.menu-open .fab{display:none}
   </div>
 </footer>
 
-<audio id="bgm" src="musica.mp3" loop preload="none"></audio>
+<audio id="bgm" src="1-13.%20Wet%20Hands.mp3" loop preload="auto"></audio>
+<div class="gate" id="gate" role="dialog" aria-label="Entrar a Kairos Network">
+  <img src="logo_kairos.png" alt="">
+  <button class="btn" id="enter" type="button">Pulsa para entrar</button>
+  <small>Esta web tiene música de fondo</small>
+</div>
 <button class="fab fab--snd" id="snd" type="button" aria-label="Silenciar sonido" aria-pressed="true">
   <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
     <rect x="1" y="6" width="3" height="4"/><rect x="4" y="5" width="2" height="6"/><rect x="6" y="3" width="2" height="10"/>
@@ -711,6 +723,20 @@ document.addEventListener("click", e => {
   if (t) blip(t.classList.contains("fab--top") ? 780 : 520);
 });
 topBtn.addEventListener("click", () => scrollTo({top: 0, behavior: "smooth"}));
+
+/* pantalla de entrada: el clic permite que la música suene desde el principio */
+const gate = $("#gate"), enter = $("#enter");
+if (!soundOn) gate.remove();
+else {
+  document.body.style.overflow = "hidden";
+  enter.focus();
+  enter.addEventListener("click", () => {
+    playMusic();
+    gate.classList.add("out");
+    document.body.style.overflow = "";
+    setTimeout(() => gate.remove(), 500);
+  });
+}
 scenes.push(() => topBtn.classList.toggle("show", scrollY > 700));
 
 /* bucle: una sola lectura de scroll por fotograma */
