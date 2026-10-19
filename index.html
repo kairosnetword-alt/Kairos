@@ -855,5 +855,310 @@ run();
   });
 })();
 </script>
+<script>
+(function () {
+  "use strict";
+
+  /* ============ CONFIGURA AQUÍ ============ */
+  var URL_SUGERENCIAS = "https://script.google.com/macros/s/AKfycbz7rVHXI3MwNXGz6n6Rq2sp7HdsppX0uhaL8LiriK-S3corlZ8Ax1gohAAfBFDbHBKsfQ/exec";
+  var URL_REPORTE = "https://script.google.com/macros/s/AKfycbz17J5Rhqtn5HH6Zl6M50Zw0G90ph_m6A4NdCnRIZOX7ShF-_TbvlyfDp9MooCyXTYTQQ/exec";
+  /* Creadores de contenido. Sube cada logo a la misma carpeta que index.html y añade una línea así:
+     { nombre: "NombreDelCreador", logo: "logo-creador.png", url: "https://www.youtube.com/@canal" }, */
+  var CREADORES = [
+  ];
+  /* ======================================== */
+
+  var anchor = document.getElementById("postular");
+  var equipo = document.getElementById("equipo");
+  if (!anchor || !equipo) return;
+
+  var css = `
+.links{gap:clamp(14px,1.6vw,26px)}
+.ct-tabs{position:relative;display:inline-flex;gap:8px;margin:34px 0 34px;padding:6px;background:#050816;box-shadow:0 -4px 0 0 var(--borde),0 4px 0 0 var(--borde),-4px 0 0 0 var(--borde),4px 0 0 0 var(--borde)}
+.ct-ind{position:absolute;z-index:0;top:6px;bottom:6px;left:0;width:0;background:linear-gradient(var(--oro-claro),var(--oro) 55%,var(--oro-fuerte));box-shadow:0 4px 0 #7a3a00;transition:transform .4s cubic-bezier(.16,1,.3,1),width .4s cubic-bezier(.16,1,.3,1)}
+.ct-tab{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:10px;border:0;cursor:pointer;padding:12px 22px;font-family:var(--display);font-weight:700;font-size:1.1rem;color:var(--apagado);background:none;transition:color .25s}
+.ct-tab:hover{color:var(--hielo)}
+.ct-tab[aria-selected=true]{color:#2b1300}
+.ct-tab svg{width:20px;height:20px;shape-rendering:crispEdges}
+.ct-panel{display:none}
+.ct-panel.on{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,6vw,80px);align-items:start}
+.ct-panel.ct-pop{animation:ctIn .55s cubic-bezier(.16,1,.3,1) both}
+@keyframes ctIn{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+.ct-ico{width:68px;height:68px;display:grid;place-items:center;margin-bottom:18px;color:var(--oro-claro);background:#1a2050;box-shadow:inset 4px 4px 0 #04061a,inset -4px -4px 0 #3a4690;animation:flota 3.4s ease-in-out infinite}
+.ct-ico svg{width:38px;height:38px;shape-rendering:crispEdges}
+.ct-side h3{font-family:var(--display);font-weight:700;font-size:clamp(1.5rem,3vw,2.1rem);line-height:1.1;color:var(--hielo);margin-bottom:12px}
+.ct-side p{max-width:48ch;color:#c5d0f0}
+.ct-points{list-style:none;display:grid;gap:10px;margin:22px 0 0}
+.ct-points li{position:relative;padding-left:22px;color:#c5d0f0;font-size:1rem;line-height:1.4}
+.ct-points li::before{content:"";position:absolute;left:0;top:.45em;width:9px;height:9px;background:var(--oro);box-shadow:0 2px 0 #7a3a00}
+.ct-aviso{margin-top:22px;max-width:52ch;padding:12px 16px;background:#1a1204;color:var(--oro-claro);font-size:.98rem;line-height:1.45;box-shadow:0 -3px 0 0 #7a3a00,0 3px 0 0 #7a3a00,-3px 0 0 0 #7a3a00,3px 0 0 0 #7a3a00}
+.ct-form{display:grid;gap:18px;margin:4px;padding:24px;background:#0a0f2c;box-shadow:0 -4px 0 0 #2a1a6e,0 4px 0 0 #2a1a6e,-4px 0 0 0 #2a1a6e,4px 0 0 0 #2a1a6e}
+.ct-f{display:grid;gap:6px;font-weight:600;color:var(--hielo);border:0;min-width:0}
+.ct-f legend{font-weight:600;margin-bottom:6px}
+.ct-f input:not([type=radio]),.ct-f textarea{font:inherit;font-weight:400;color:var(--hielo);background:#050816;padding:11px 12px;border:0;margin:3px;width:calc(100% - 6px);resize:vertical;box-shadow:0 -3px 0 0 var(--borde),0 3px 0 0 var(--borde),-3px 0 0 0 var(--borde),3px 0 0 0 var(--borde);transition:box-shadow .15s}
+.ct-f input:not([type=radio]):focus,.ct-f textarea:focus{outline:0;box-shadow:0 -3px 0 0 var(--diamante),0 3px 0 0 var(--diamante),-3px 0 0 0 var(--diamante),3px 0 0 0 var(--diamante),0 0 22px rgba(77,230,245,.22)}
+.ct-f textarea{min-height:104px}
+.ct-count{justify-self:end;font-weight:500;font-size:.82rem;color:var(--apagado)}
+.ct-radios{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.ct-radios legend{flex:0 0 100%}
+.ct-radios label{position:relative;display:block;font-weight:600}
+.ct-radios input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;margin:0}
+.ct-radios span{display:block;padding:8px 22px;margin:3px;background:#050816;color:var(--apagado);box-shadow:0 -3px 0 0 var(--borde),0 3px 0 0 var(--borde),-3px 0 0 0 var(--borde),3px 0 0 0 var(--borde);transition:transform .12s,color .15s,background .15s}
+.ct-radios label:hover span{color:var(--hielo);transform:translateY(-2px)}
+.ct-radios input:checked+span{color:#2b1300;background:linear-gradient(var(--oro-claro),var(--oro-fuerte));box-shadow:0 -3px 0 0 #7a3a00,0 3px 0 0 #7a3a00,-3px 0 0 0 #7a3a00,3px 0 0 0 #7a3a00}
+.ct-radios input:focus-visible+span{outline:3px solid var(--diamante);outline-offset:3px}
+.ct-check{display:flex;gap:10px;align-items:flex-start;font-weight:500;font-size:.92rem;color:#c5d0f0}
+.ct-check input{margin-top:4px;flex:none;width:18px;height:18px;accent-color:var(--oro)}
+.ct-form .btn{justify-self:start}
+.ct-trampa{position:absolute;left:-9999px;width:0;height:0;opacity:0}
+.ct-msg{min-height:1.4em;font-weight:600;color:var(--diamante)}
+.ct-msg.ok{animation:ctIn .5s cubic-bezier(.16,1,.3,1) both}
+.ct-msg.err{color:#ff7a7a}
+.cr-grid{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:20px;margin-top:40px}
+.cr-in{display:flex;flex-direction:column;align-items:center;gap:12px;height:100%;padding:24px 14px 20px;margin:4px;text-align:center;text-decoration:none;background:#0a0f2c;box-shadow:0 -4px 0 0 #2a1a6e,0 4px 0 0 #2a1a6e,-4px 0 0 0 #2a1a6e,4px 0 0 0 #2a1a6e;transition:transform .2s,box-shadow .15s,background .15s}
+a.cr-in:hover{transform:translateY(-6px);background:#0f1640;box-shadow:0 -4px 0 0 var(--amatista),0 4px 0 0 var(--amatista),-4px 0 0 0 var(--amatista),4px 0 0 0 var(--amatista)}
+.cr-logo{width:104px;height:104px;display:grid;place-items:center;background:#1a2050;box-shadow:inset 4px 4px 0 #04061a,inset -4px -4px 0 #3a4690;font-family:var(--display);font-weight:700;font-size:2.6rem;color:var(--oro-claro);overflow:hidden}
+.cr-logo img{width:100%;height:100%;object-fit:contain;padding:8px}
+.cr-in strong{font-family:var(--display);font-size:1.3rem;line-height:1.15;color:var(--oro-claro)}
+.cr-in small{color:var(--diamante);font-weight:600}
+@media (max-width:900px){
+  .ct-tabs{display:flex;width:100%}
+  .ct-tab{flex:1;padding:12px 8px;font-size:.98rem;gap:8px}
+  .ct-panel.on{grid-template-columns:1fr}
+}
+`;
+  var st = document.createElement("style");
+  st.textContent = css;
+  document.head.appendChild(st);
+
+  var ICO_IDEA = '<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="6" y="1" width="4" height="1"/><rect x="5" y="2" width="6" height="1"/><rect x="4" y="3" width="8" height="5"/><rect x="5" y="8" width="6" height="1"/><rect x="6" y="9" width="4" height="1"/><rect x="6" y="11" width="4" height="1"/><rect x="7" y="13" width="2" height="1"/></svg>';
+  var ICO_FLAG = '<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="3" y="2" width="1" height="12"/><rect x="4" y="2" width="9" height="1"/><rect x="4" y="3" width="10" height="4"/><rect x="4" y="7" width="9" height="1"/></svg>';
+
+  var contacto = [
+    '<section class="sec" id="contacto">',
+    '  <div class="wrap">',
+    '    <h2>Contacto con el staff</h2>',
+    '    <p class="lead">Cuéntanos tu idea o avísanos si algo no va bien. Tu mensaje llega por correo directamente a los owners y la administración.</p>',
+    '    <div class="ct-tabs" role="tablist" aria-label="Tipo de mensaje">',
+    '      <span class="ct-ind" aria-hidden="true"></span>',
+    '      <button class="ct-tab" role="tab" id="ct-t0" aria-controls="ct-p0" aria-selected="true" type="button">' + ICO_IDEA + 'Sugerencias</button>',
+    '      <button class="ct-tab" role="tab" id="ct-t1" aria-controls="ct-p1" aria-selected="false" tabindex="-1" type="button">' + ICO_FLAG + 'Reportar a un staff</button>',
+    '    </div>',
+    '    <div class="ct-stage">',
+
+    '      <div class="ct-panel on" role="tabpanel" id="ct-p0" aria-labelledby="ct-t0">',
+    '        <div class="ct-side">',
+    '          <div class="ct-ico">' + ICO_IDEA + '</div>',
+    '          <h3>¿Tienes una idea para Kairos?</h3>',
+    '          <p>Cuanto mejor la expliques, más fácil será que la podamos añadir.</p>',
+    '          <ul class="ct-points"><li>Describe qué quieres que añadamos.</li><li>Cuéntanos por qué mejoraría el servidor.</li><li>Dinos si crees que es urgente.</li></ul>',
+    '        </div>',
+    '        <form class="ct-form" id="ct-sug" autocomplete="off">',
+    '          <label class="ct-f">Tu usuario<input name="usuario" required minlength="3" maxlength="40" placeholder="Tu nombre de Minecraft o Discord"></label>',
+    '          <label class="ct-f">Tu sugerencia<textarea name="sugerencia" required minlength="10" maxlength="600" data-max="600" rows="4" placeholder="¿Qué te gustaría que añadiéramos?"></textarea><small class="ct-count">0 / 600</small></label>',
+    '          <label class="ct-f">¿Por qué crees que funcionaría si la añadimos?<textarea name="porque" required minlength="10" maxlength="600" data-max="600" rows="4" placeholder="Explícanos cómo ayudaría al servidor"></textarea><small class="ct-count">0 / 600</small></label>',
+    '          <fieldset class="ct-f ct-radios"><legend>¿Crees que es urgente?</legend><label><input type="radio" name="urgente" value="Sí" required><span>Sí</span></label><label><input type="radio" name="urgente" value="No"><span>No</span></label></fieldset>',
+    '          <input class="ct-trampa" name="web" tabindex="-1" autocomplete="off" aria-hidden="true">',
+    '          <label class="ct-check"><input type="checkbox" required><span>Acepto que se guarden estos datos solo para revisar mi sugerencia.</span></label>',
+    '          <button class="btn" type="submit">Enviar sugerencia</button>',
+    '          <p class="ct-msg" role="status"></p>',
+    '        </form>',
+    '      </div>',
+
+    '      <div class="ct-panel" role="tabpanel" id="ct-p1" aria-labelledby="ct-t1">',
+    '        <div class="ct-side">',
+    '          <div class="ct-ico">' + ICO_FLAG + '</div>',
+    '          <h3>Reporta a un miembro del staff</h3>',
+    '          <p>Si un staff ha abusado de sus permisos o te ha tratado mal, cuéntanoslo aquí. El reporte llega por correo directamente a los owners.</p>',
+    '          <ul class="ct-points"><li>Indica el nombre del staff y qué ocurrió.</li><li>Añade los jugadores afectados y los testigos.</li><li>Usa tu correo real: lo usaremos para contestarte.</li></ul>',
+    '          <p class="ct-aviso">Importante: no incluyas contraseñas ni datos privados de tus cuentas.</p>',
+    '        </div>',
+    '        <form class="ct-form" id="ct-rep" autocomplete="off">',
+    '          <label class="ct-f">Tu usuario<input name="nombre" required minlength="3" maxlength="40" placeholder="Tu nombre de Minecraft o Discord"></label>',
+    '          <label class="ct-f">Tu correo electrónico<input name="correo" type="email" required maxlength="80" placeholder="tucorreo@gmail.com"></label>',
+    '          <label class="ct-f">Staff al que reportas<input name="staff" required minlength="3" maxlength="40" placeholder="Nombre del staff"></label>',
+    '          <label class="ct-f">Jugadores afectados<input name="afectados" required maxlength="120" placeholder="Si solo fuiste tú, escribe «yo»"></label>',
+    '          <label class="ct-f">Testigos<input name="testigos" required maxlength="120" placeholder="Si no hay, escribe «ninguno»"></label>',
+    '          <label class="ct-f">¿Qué pasó?<textarea name="paso" required minlength="15" maxlength="800" data-max="800" rows="5" placeholder="Cuéntanos qué ocurrió, cuándo y dónde"></textarea><small class="ct-count">0 / 800</small></label>',
+    '          <input class="ct-trampa" name="web" tabindex="-1" autocomplete="off" aria-hidden="true">',
+    '          <label class="ct-check"><input type="checkbox" required><span>Acepto que se guarden estos datos solo para revisar este reporte.</span></label>',
+    '          <button class="btn" type="submit">Enviar reporte</button>',
+    '          <p class="ct-msg" role="status"></p>',
+    '        </form>',
+    '      </div>',
+
+    '    </div>',
+    '  </div>',
+    '</section>'
+  ].join("\n");
+
+  var creadores = [
+    '<section class="sec" id="creadores">',
+    '  <div class="wrap">',
+    '    <h2>Creadores de contenido</h2>',
+    '    <p class="lead">Las personas que crean contenido sobre Kairos Network.</p>',
+    '    <ul class="cr-grid" id="cr-grid"></ul>',
+    '    <div class="vacio" id="cr-vacio">Próximamente…</div>',
+    '  </div>',
+    '</section>'
+  ].join("\n");
+
+  anchor.insertAdjacentHTML("beforebegin", contacto);
+  equipo.insertAdjacentHTML("afterend", creadores);
+
+  /* creadores: tarjetas con logo */
+  var grid = document.getElementById("cr-grid");
+  var vacio = document.getElementById("cr-vacio");
+  if (CREADORES.length) {
+    vacio.remove();
+    CREADORES.forEach(function (c) {
+      var li = document.createElement("li");
+      li.className = "cr-card";
+      var enlace = c.url && /^https:\/\//i.test(c.url);
+      var host = document.createElement(enlace ? "a" : "div");
+      host.className = "cr-in";
+      if (enlace) { host.href = c.url; host.target = "_blank"; host.rel = "noopener"; }
+      var marco = document.createElement("span");
+      marco.className = "cr-logo";
+      var img = document.createElement("img");
+      img.src = c.logo;
+      img.alt = "Logo de " + c.nombre;
+      img.loading = "lazy";
+      img.onerror = function () {
+        var s = document.createElement("span");
+        s.textContent = String(c.nombre || "?").charAt(0).toUpperCase();
+        marco.replaceChild(s, img);
+      };
+      marco.appendChild(img);
+      var nombre = document.createElement("strong");
+      nombre.textContent = c.nombre;
+      host.appendChild(marco);
+      host.appendChild(nombre);
+      if (enlace) {
+        var ver = document.createElement("small");
+        ver.textContent = "Ver canal →";
+        host.appendChild(ver);
+      }
+      li.appendChild(host);
+      grid.appendChild(li);
+    });
+  } else {
+    grid.remove();
+  }
+
+  /* enlaces del menú */
+  var navN = document.querySelector('.links a[href="#normas"]');
+  if (navN && navN.parentNode) {
+    navN.parentNode.insertAdjacentHTML("afterend", '<li><a href="#contacto">Contacto</a></li>');
+  }
+  var menuN = document.querySelector('#menu a[href="#normas"]');
+  if (menuN) {
+    [["#contacto", "Contacto"], ["#creadores", "Creadores"]].forEach(function (x) {
+      var a = document.createElement("a");
+      a.href = x[0];
+      a.textContent = x[1];
+      a.addEventListener("click", function () {
+        document.body.classList.remove("menu-open");
+        var b = document.getElementById("burger");
+        if (b) b.setAttribute("aria-expanded", "false");
+      });
+      menuN.insertAdjacentElement("afterend", a);
+    });
+  }
+
+  /* pestañas con indicador animado */
+  var tabs = [].slice.call(document.querySelectorAll(".ct-tab"));
+  var panels = [].slice.call(document.querySelectorAll(".ct-panel"));
+  var ind = document.querySelector(".ct-ind");
+  function moverInd() {
+    var t = tabs.filter(function (x) { return x.getAttribute("aria-selected") === "true"; })[0];
+    if (!t) return;
+    ind.style.width = t.offsetWidth + "px";
+    ind.style.transform = "translateX(" + t.offsetLeft + "px)";
+  }
+  function elegir(i, enfocar) {
+    tabs.forEach(function (t, k) {
+      t.setAttribute("aria-selected", k === i ? "true" : "false");
+      t.tabIndex = k === i ? 0 : -1;
+    });
+    panels.forEach(function (p, k) {
+      p.classList.remove("on", "ct-pop");
+      if (k === i) { void p.offsetWidth; p.classList.add("on", "ct-pop"); }
+    });
+    moverInd();
+    if (enfocar) tabs[i].focus();
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener("click", function () { elegir(i, false); });
+    t.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowRight") { e.preventDefault(); elegir((i + 1) % tabs.length, true); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); elegir((i + tabs.length - 1) % tabs.length, true); }
+    });
+  });
+  moverInd();
+  window.addEventListener("resize", moverInd);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(moverInd);
+
+  /* contador de caracteres */
+  function contar(ta) {
+    var c = ta.parentNode.querySelector(".ct-count");
+    if (c) c.textContent = ta.value.length + " / " + ta.getAttribute("data-max");
+  }
+  [].forEach.call(document.querySelectorAll("#contacto textarea"), function (ta) {
+    ta.addEventListener("input", function () { contar(ta); });
+  });
+
+  /* envío a Google Sheets (el script de Google también te manda el correo) */
+  function conectar(form, url, ok) {
+    var btn = form.querySelector(".btn");
+    var msg = form.querySelector(".ct-msg");
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (form.web.value) return;
+      if (!url) {
+        msg.className = "ct-msg err";
+        msg.textContent = "Este formulario todavía no está activo.";
+        return;
+      }
+      btn.disabled = true;
+      msg.className = "ct-msg";
+      msg.textContent = "Enviando...";
+      fetch(url, {
+        method: "POST",
+        mode: "no-cors",
+        body: new URLSearchParams(new FormData(form))
+      }).then(function () {
+        msg.className = "ct-msg ok";
+        msg.textContent = ok;
+        form.reset();
+        [].forEach.call(form.querySelectorAll("textarea"), contar);
+      }).catch(function () {
+        msg.className = "ct-msg err";
+        msg.textContent = "No se pudo enviar. Inténtalo de nuevo en un rato.";
+      }).then(function () {
+        setTimeout(function () { btn.disabled = false; }, 4000);
+      });
+    });
+  }
+  conectar(document.getElementById("ct-sug"), URL_SUGERENCIAS, "¡Gracias! Tu sugerencia ya está en camino al equipo.");
+  conectar(document.getElementById("ct-rep"), URL_REPORTE, "Reporte enviado. Los owners lo revisarán y te responderán al correo que indicaste.");
+
+  /* aparición suave al bajar */
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduce && "IntersectionObserver" in window) {
+    var els = [].slice.call(document.querySelectorAll("#contacto h2, #contacto .lead, #contacto .ct-tabs, #contacto .ct-stage, #creadores h2, #creadores .lead, #creadores .cr-card, #creadores .vacio"));
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+    els.forEach(function (el, i) {
+      el.classList.add("rv");
+      el.style.setProperty("--d", ((i % 6) * 110) + "ms");
+      io.observe(el);
+    });
+  }
+})();
+</script>
 </body>
 </html>
